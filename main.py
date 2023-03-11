@@ -1,32 +1,44 @@
 import sys
 from pojo.robot import Robot
 
-class robot:
-    def __init__(self,
-                 id,
-                 coord_x,
-                 coord_y,
-                 forward,
-                 angular_v =0,
-                 linear_v=0,
-                 radius=0.45,
-                 mass=9):
-        self.id = id                            # 机器人id
-        self.coord_x = coord_x                  # 机器人x坐标
-        self.coord_y = coord_y                  # 机器人y坐标
-        self.forward = forward                  # 机器人朝向
-        self.angular_v = angular_v              # 机器人角速度
-        self.linear_v = linear_v                # 机器人线速度
-        self.radius = radius                    # 机器人半径
-        self.mass = mass                        # 机器人质量 单位/kg
+# 需要创建全局材料需求信息表
+# 格式：   {"7"：{"produced": 1,
+#               "工作台编号": 10,
+#                   "4"   :  {"produced": 0,
+#                               "1"     : 0,
+#                               "2"     : 1},
+#                   "5"   :  {"produced": 0,
+#                               "1"     : 0,
+#                               "3"     : 1},
+#                   "6"   :  {"produced": 0,
+#                               "2"     : 0,
+#                               "3"     : 1},
+#               }
+#         }
+
 
 
 
 def initialize():
+    """
+        初始化函数：
+            功能：
+                1. 初始化机器人信息（编号，位置）
+                2. 初始化工作台信息（编号，位置）
+                3. 初始化可供应对应材料的工作台信息
+    :return:
+    """
+    key = [1, 2, 3, 4, 5, 6, 7, 8, 9]
     y = 49.75
-    robot_dict = {}
-    workbench_dict = {}
-    robot_define_id = 1
+    robot_dict = {}                                              # 保存机器人对象{编号：机器人对象}
+    workbench_dict = {}                                          # 保存工作台对象{工作台编号： 工作台对象}
+    workbench_article_dict = dict((i ,[]) for i in key)          # 保存材料对应工作对象{可获取材料编号：[工作台对象1， 工作台对象2]}
+    print(workbench_article_dict)
+
+    robot_define_id = 0                                          # 定义机器人编号id
+    workbench_define_id = 0                                      # 定义工作台编号id
+
+    # 循环读入输入知道输入为“OK” 停止
     while True:
         info = input()
         if info == "OK":
@@ -34,7 +46,7 @@ def initialize():
         x = 0.25
         for i in info:
             if i == '.':
-                x += 0.25
+                x += 0.5
                 continue
             elif i == 'A':
                 robot = Robot()
@@ -42,10 +54,11 @@ def initialize():
                 robot_define_id += 1
                 continue
             else:
-                workbench_id = eval(i)
+                workbench_article_id = eval(i)
                 workbench = Workbench()
-                workbench_dict[workbench_id] = workbench
-
+                workbench_dict[workbench_define_id] = workbench
+                workbench_article_dict[workbench_article_id].append(workbench)
+        y -= 0.5
 
 
 
